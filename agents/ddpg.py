@@ -7,6 +7,7 @@ import numpy as np
 class DDPG():
     """Reinforcement Learning agent that learns using DDPG."""
     def __init__(self, task,
+                 actor_learning_rate=0.001, critic_learning_rate=0.001,
                  tau=0.01, gamma=0.99,
                  buffer_size=100000, batch_size=64,
                  exploration_mu=0, exploration_theta=0.15, exploration_sigma=0.2):
@@ -17,12 +18,12 @@ class DDPG():
         self.action_high = task.action_high
 
         # Actor (Policy) Model
-        self.actor_local = Actor(self.state_size, self.action_size, self.action_low, self.action_high)
-        self.actor_target = Actor(self.state_size, self.action_size, self.action_low, self.action_high)
+        self.actor_local = Actor(self.state_size, self.action_size, self.action_low, self.action_high, actor_learning_rate)
+        self.actor_target = Actor(self.state_size, self.action_size, self.action_low, self.action_high, actor_learning_rate)
 
         # Critic (Value) Model
-        self.critic_local = Critic(self.state_size, self.action_size)
-        self.critic_target = Critic(self.state_size, self.action_size)
+        self.critic_local = Critic(self.state_size, self.action_size, critic_learning_rate)
+        self.critic_target = Critic(self.state_size, self.action_size,critic_learning_rate)
 
         # Initialize target model parameters with local model parameters
         self.critic_target.model.set_weights(self.critic_local.model.get_weights())
