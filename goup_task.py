@@ -31,7 +31,7 @@ class GoupTask():
 
         current_z = self.sim.pose[2]
         d = abs(current_z - self.target_z)
-        reward = -d
+        reward = min(1/d, 1)
 
         if current_z > self.target_z:
             done = True
