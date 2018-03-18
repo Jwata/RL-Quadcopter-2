@@ -67,10 +67,6 @@ class DDPG():
         state = np.reshape(states, [-1, self.state_size])
         action = self.actor_local.model.predict(state)[0]
         noise = self.noise.sample()
-        #print('states', states)
-        #print('state', state)
-        #print('action', action)
-        #print('noise', noise)
         return list(action + noise)  # add some noise for exploration
 
     def learn(self, experiences):

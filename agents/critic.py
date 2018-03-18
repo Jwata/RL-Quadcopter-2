@@ -27,23 +27,29 @@ class Critic:
         actions = layers.Input(shape=(self.action_size,), name='actions')
 
         # Add hidden layer(s) for state pathway
-        net_states = layers.Dense(units=400, activation=None)(states)
+        net_states = layers.Dense(units=32, activation=None)(states)
+        net_states = layers.normalization.BatchNormalization()(net_states)
+        net_states = layers.Activation('relu')(net_states)
+        net_states = layers.Dense(units=64, activation=None)(net_states)
         net_states = layers.normalization.BatchNormalization()(net_states)
         net_states = layers.Activation('relu')(net_states)
 
-        net_states = layers.Dense(units=300, activation=None)(net_states)
-        net_actions = layers.Dense(units=300, activation=None)(actions)
+        # Add hidden layer(s) for action pathway
+        net_actions = layers.Dense(units=32, activation=None)(actions)
+        net_actions = layers.normalization.BatchNormalization()(net_actions)
+        net_actions = layers.Activation('relu')(net_actions)
+        net_actions = layers.Dense(units=64, activation=None)(net_actions)
+        net_actions = layers.normalization.BatchNormalization()(net_actions)
+        net_actions = layers.Activation('relu')(net_actions)
 
         # Combine state and action pathways
-        net = layers.Add()([net_states, actions])
+        net = layers.Add()([net_states, net_actions])
         net = layers.Activation('relu')(net)
 
         # Add more layers to the combined network if needed
 
         # Add final output layer to prduce action values (Q values)
-        w_init = initializers.RandomUniform(minval=-0.003, maxval=0.003)
-        Q_values = layers.Dense(units=1, name='q_values',
-            kernel_initializer=w_init)(net)
+        Q_values = layers.Dense(units=1, name='q_values')(net)
 
         # Create Keras model
         self.model = models.Model(inputs=[states, actions], outputs=Q_values)
