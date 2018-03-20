@@ -35,10 +35,7 @@ class Critic:
         net_states = layers.Activation('relu')(net_states)
 
         # Add hidden layer(s) for action pathway
-        net_actions = layers.Dense(units=32, activation=None)(actions)
-        net_actions = layers.normalization.BatchNormalization()(net_actions)
-        net_actions = layers.Activation('relu')(net_actions)
-        net_actions = layers.Dense(units=64, activation=None)(net_actions)
+        net_actions = layers.Dense(units=64, activation=None)(actions)
         net_actions = layers.normalization.BatchNormalization()(net_actions)
         net_actions = layers.Activation('relu')(net_actions)
 
